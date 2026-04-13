@@ -121,16 +121,34 @@ const CustomCursor = () => {
 };
 
 const Scene = ({ data, index, scrollYProgress }) => {
-  const start = index / CONTENT.length;
-  const end = (index + 1) / CONTENT.length;
+  const count = CONTENT.length;
+  const start = index / count;
+  const end = (index + 1) / count;
+  const nextStart = (index + 1) / count;
   
-  // Continuous Overlap Logic: 
-  // Next scene starts at 'start - 0.3' so it's visible while previous is active
-  // Current scene exits at 'end + 0.2' so it fully passes the camera
-  const scale = useTransform(scrollYProgress, [start - 0.4, start, end, end + 0.4], [0.1, 1, 1.2, 5]);
-  const opacity = useTransform(scrollYProgress, [start - 0.3, start, start + 0.1, end - 0.1, end, end + 0.2], [0, 0, 1, 1, 0.5, 0]);
-  const blur = useTransform(scrollYProgress, [start - 0.4, start, start + 0.2], [20, 0, 0]);
-  const zIndex = index + 10;
+  // Transition curves
+  // If it's the first scene, it starts at scale 1 and opacity 1
+  const scale = useTransform(
+    scrollYProgress, 
+    [start - 0.2, start, end, end + 0.3], 
+    index === 0 ? [1, 1, 1.3, 4] : [0.2, 1, 1.3, 4]
+  );
+  
+  const opacity = useTransform(
+    scrollYProgress, 
+    [start - 0.15, start, start + 0.05, end - 0.05, end, end + 0.15], 
+    index === 0 
+      ? [1, 1, 1, 1, 0.5, 0] 
+      : (index === count - 1 
+          ? [0, 0, 1, 1, 1, 1] 
+          : [0, 0, 1, 1, 0.5, 0])
+  );
+
+  const blur = useTransform(
+    scrollYProgress, 
+    [start - 0.2, start, start + 0.1], 
+    index === 0 ? [0, 0, 0] : [20, 0, 0]
+  );
 
   return (
     <motion.section 
@@ -138,13 +156,14 @@ const Scene = ({ data, index, scrollYProgress }) => {
       style={{ 
         scale,
         opacity,
-        zIndex,
-        filter: `blur(${blur}px)`,
+        zIndex: index + 10,
+        filter: `blur(${blur}px) url(#liquid-filter)`,
         position: 'fixed',
         inset: 0,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        pointerEvents: useTransform(scrollYProgress, [start, end], ['auto', 'none'])
       }}
     >
       {/* Background Depth */}
@@ -159,14 +178,13 @@ const Scene = ({ data, index, scrollYProgress }) => {
         <div className="atmosphere" />
       </div>
 
-      {/* 3D Floating Lanterns (Dynamic count for depth) */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         {[...Array(10)].map((_, i) => (
           <Lantern key={i} delay={i * 2 + index} />
         ))}
       </div>
 
-      {/* Content Layer with 'Pull' Effect */}
+      {/* Content Layer with 'Liquid' Distortion */}
       <motion.div 
         style={{ 
           position: 'relative', 
@@ -177,9 +195,9 @@ const Scene = ({ data, index, scrollYProgress }) => {
         }}
       >
         <span className="editorial-subtitle" style={{ letterSpacing: '0.6em' }}>{data.subtitle}</span>
-        <h2 className="editorial-title">{data.title}</h2>
+        <h2 className="editorial-title" style={{ filter: 'url(#liquid-filter)' }}>{data.title}</h2>
         <div style={{ height: '1px', width: '80px', background: 'var(--accent)', margin: '0 auto 2.5rem' }} />
-        <p className="editorial-body">{data.body}</p>
+        <p className="editorial-body" style={{ filter: 'url(#liquid-filter)' }}>{data.body}</p>
         {data.cta && (
           <div style={{ marginTop: '3rem' }}>
             <a href="#" className="btn-cinematic">RSVP OUR UNION</a>
@@ -192,7 +210,9 @@ const Scene = ({ data, index, scrollYProgress }) => {
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
+  const [freq, setFreq] = useState(0.012);
   const containerRef = useRef(null);
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -203,6 +223,17 @@ export default function App() {
     damping: 30,
     restDelta: 0.001
   });
+
+  // Animate the liquid filter base frequency for a shifting molten effect
+  useEffect(() => {
+    let frame;
+    const animate = (time) => {
+      setFreq(0.012 + Math.sin(time / 800) * 0.004);
+      frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -215,6 +246,14 @@ export default function App() {
     <main ref={containerRef} style={{ height: `${CONTENT.length * 100}vh`, position: 'relative' }}>
       <CustomCursor />
       
+      {/* SVG Liquid Filter Definition */}
+      <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
+        <filter id="liquid-filter">
+          <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="15" />
+        </filter>
+      </svg>
+
       {/* Global Cinematic Elements */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', border: '1px solid rgba(255,255,255,0.05)', zIndex: 1000 }} />
       
@@ -239,7 +278,6 @@ export default function App() {
         ))}
       </div>
 
-      {/* Aesthetic Side Labels - Hidden on Mobile */}
       {!isMobile && (
         <div style={{ position: 'fixed', left: '40px', bottom: '40px', zIndex: 100 }}>
            <motion.div 
@@ -254,6 +292,7 @@ export default function App() {
     </main>
   );
 }
+
 
 
 

@@ -180,19 +180,22 @@ const Preloader = ({ progress, visible }) => {
 const TOTAL_SLIDES = 3;
 const SWIPE_THRESHOLD = 40;
 
-const ASSETS = [
+const CRITICAL_ASSETS = [
   '/assets/topborder.webp',
   '/assets/hhh.webp',
   '/assets/borderside.webp',
+  '/assets/song.mp3',
+  '/assets/leftF.webp',
+  '/assets/rightF.webp'
+];
+
+const SECONDARY_ASSETS = [
   '/assets/one.webp',
-  '/assets/bottomframe1.webp',
   '/assets/two.webp',
   '/assets/drawcouple.webp',
-  '/assets/leftF.webp',
-  '/assets/rightF.webp',
+  '/assets/bottomframe1.webp',
   '/assets/clienthero.webp',
-  '/assets/client_details.webp',
-  '/assets/song.mp3'
+  '/assets/client_details.webp'
 ];
 
 export default function App() {
@@ -241,9 +244,9 @@ export default function App() {
 
   useEffect(() => {
     let loadedCount = 0;
-    const totalAssets = ASSETS.length;
+    const totalAssets = CRITICAL_ASSETS.length;
 
-    const preloadImage = (src) => {
+    const preloadItem = (src) => {
       return new Promise((resolve) => {
         const isAudio = src.endsWith('.mp3');
         if (isAudio) {
@@ -266,8 +269,18 @@ export default function App() {
       });
     };
 
-    Promise.all(ASSETS.map(src => preloadImage(src))).then(() => {
+    // Load Critical Assets First
+    Promise.all(CRITICAL_ASSETS.map(src => preloadItem(src))).then(() => {
       setTimeout(() => setIsLoading(false), 1500);
+      
+      // Start background preloading of secondary assets once critical path is clear
+      SECONDARY_ASSETS.forEach(src => {
+        if (src.endsWith('.mp3')) {
+          new Audio().src = src;
+        } else {
+          new Image().src = src;
+        }
+      });
     });
   }, []);
 
@@ -470,6 +483,21 @@ export default function App() {
         <AnimatePresence>
           {!horizontalComplete && (
             <motion.div className="horizontal-slider-fixed" key="slider-wrapper" exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
+
+              {/* Scroll to Explore Indicator */}
+              <motion.div 
+                className={`scroll-indicator slide-${currentSlide}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: (!isLoading && currentSlide < 3) ? 1 : 0, y: 0 }}
+                transition={{ delay: 3, duration: 1 }}
+              >
+                <div className="scroll-arrows-group">
+                  <div className="arrow-chevron-pulse v1"></div>
+                  <div className="arrow-chevron-pulse v2"></div>
+                  <div className="arrow-chevron-pulse v3"></div>
+                </div>
+                <span className="scroll-text">Scroll to Explore</span>
+              </motion.div>
 
               {/* SLIDE 1: HERO */}
               <AnimatePresence>

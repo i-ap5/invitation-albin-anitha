@@ -182,7 +182,7 @@ const SWIPE_THRESHOLD = 40;
 
 const CRITICAL_ASSETS = [
   '/assets/topborder.webp',
-  '/assets/hhh.webp',
+  '/assets/client.webp',
   '/assets/borderside.webp',
   '/assets/song.mp3',
   '/assets/leftF.webp',
@@ -272,7 +272,7 @@ export default function App() {
     // Load Critical Assets First
     Promise.all(CRITICAL_ASSETS.map(src => preloadItem(src))).then(() => {
       setTimeout(() => setIsLoading(false), 1500);
-      
+
       // Start background preloading of secondary assets once critical path is clear
       SECONDARY_ASSETS.forEach(src => {
         if (src.endsWith('.mp3')) {
@@ -485,7 +485,7 @@ export default function App() {
             <motion.div className="horizontal-slider-fixed" key="slider-wrapper" exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
 
               {/* Scroll to Explore Indicator */}
-              <motion.div 
+              <motion.div
                 className={`scroll-indicator slide-${currentSlide}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: (!isLoading && currentSlide < 3) ? 1 : 0, y: 0 }}
@@ -522,7 +522,7 @@ export default function App() {
                     <div className="hero-image-container">
                       <div className="gold-frame" />
                       <div className="hero-image-wrapper">
-                        <img src="/assets/hhh.webp" className="hero-image" alt="Albin and Anitha" />
+                        <img src="/assets/client.webp" className="hero-image" alt="Albin and Anitha" />
                         <div className="hero-gradient-overlay" />
                         <div className="hero-vignette" />
                       </div>

@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect, useCallback, useState } from 'react';
+import SplitText from './SplitText';
 
 const Section = ({ children, className, id, style }) => (
   <motion.section
@@ -20,20 +21,20 @@ const FloralDecor = ({ variant = 'default' }) => (
   <>
     {variant === 'default' && (
       <>
-        <img src="/assets/leftF.png" className="floral-bg floral-top-left" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
-        <img src="/assets/rightF.png" className="floral-bg floral-bottom-right" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
+        <img src="/assets/leftF.webp" className="floral-bg floral-top-left" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
+        <img src="/assets/rightF.webp" className="floral-bg floral-bottom-right" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
       </>
     )}
     {variant === 'reversed' && (
       <>
-        <img src="/assets/rightF.png" className="floral-bg floral-top-right" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
-        <img src="/assets/leftF.png" className="floral-bg floral-bottom-left" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
+        <img src="/assets/rightF.webp" className="floral-bg floral-top-right" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
+        <img src="/assets/leftF.webp" className="floral-bg floral-bottom-left" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
       </>
     )}
     {variant === 'top-only' && (
       <>
-        <img src="/assets/leftF.png" className="floral-bg floral-top-left" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
-        <img src="/assets/rightF.png" className="floral-bg floral-top-right" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
+        <img src="/assets/leftF.webp" className="floral-bg floral-top-left" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
+        <img src="/assets/rightF.webp" className="floral-bg floral-top-right" style={{ scale: '1.2', opacity: 0.6 }} alt="" />
       </>
     )}
   </>
@@ -44,9 +45,9 @@ const Preloader = ({ progress, visible }) => {
   const particles = Array.from({ length: 12 });
 
   return (
-    <motion.div 
+    <motion.div
       className="preloader-overlay"
-      animate={{ 
+      animate={{
         opacity: visible ? 1 : 0,
         scale: visible ? 1 : 1.2,
         pointerEvents: visible ? 'auto' : 'none'
@@ -54,14 +55,14 @@ const Preloader = ({ progress, visible }) => {
       transition={{ duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }}
     >
       {/* Ghostly Florals */}
-      <motion.img 
-        src="/assets/leftF.png" 
+      <motion.img
+        src="/assets/leftF.webp"
         className="preloader-floral left"
         animate={{ rotate: [0, 5, 0], opacity: [0.1, 0.2, 0.1] }}
         transition={{ repeat: Infinity, duration: 8 }}
       />
-      <motion.img 
-        src="/assets/rightF.png" 
+      <motion.img
+        src="/assets/rightF.webp"
         className="preloader-floral right"
         animate={{ rotate: [0, -5, 0], opacity: [0.1, 0.2, 0.1] }}
         transition={{ repeat: Infinity, duration: 10 }}
@@ -72,18 +73,18 @@ const Preloader = ({ progress, visible }) => {
         <motion.div
           key={i}
           className="gold-particle"
-          initial={{ 
-            x: Math.random() * window.innerWidth, 
+          initial={{
+            x: Math.random() * window.innerWidth,
             y: Math.random() * window.innerHeight,
-            opacity: 0 
+            opacity: 0
           }}
-          animate={{ 
+          animate={{
             y: [null, '-100vh'],
             opacity: [0, 0.6, 0],
             x: [null, `+=${(Math.random() - 0.5) * 100}px`]
           }}
-          transition={{ 
-            duration: 10 + Math.random() * 10, 
+          transition={{
+            duration: 10 + Math.random() * 10,
             repeat: Infinity,
             delay: Math.random() * 5
           }}
@@ -106,23 +107,63 @@ const Preloader = ({ progress, visible }) => {
             />
           </svg>
 
-          <h1 className="liquid-text">
-            ALBIN <span className="amp">&</span> ANITHA
-            {/* The gold filling layer */}
-            <div 
-              className="liquid-fill" 
-              style={{ width: `${progress}%` }}
-            >
+          <motion.div
+            className="preloader-heart"
+            animate={{ scale: [1, 1.04, 1] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          >
+            <svg viewBox="0 0 100 100" width="72" height="72" fill="none">
+              {/* Sparkle dots */}
+              {[
+                { cx: 50, cy: 7,  delay: 0 },
+                { cx: 19, cy: 18, delay: 0.4 },
+                { cx: 81, cy: 18, delay: 0.8 },
+                { cx: 4,  cy: 46, delay: 1.2 },
+                { cx: 96, cy: 46, delay: 1.6 },
+                { cx: 50, cy: 98, delay: 2.0 },
+              ].map(({ cx, cy, delay }, i) => (
+                <motion.circle
+                  key={i}
+                  cx={cx} cy={cy} r="1.4"
+                  fill="var(--accent-gold)"
+                  animate={{ opacity: [0, 0.9, 0], scale: [0.5, 1.2, 0.5] }}
+                  transition={{ repeat: Infinity, duration: 2.4, delay, ease: 'easeInOut' }}
+                />
+              ))}
+
+              {/* Heart outline — draws itself in */}
+              <motion.path
+                d="M50 35 C50 28,40 20,30 20 C18 20,12 32,12 42 C12 58,26 68,50 82 C74 68,88 58,88 42 C88 32,82 20,70 20 C60 20,50 28,50 35Z"
+                stroke="var(--accent-gold)"
+                strokeWidth="1.4"
+                fill="rgba(197,160,89,0.07)"
+                strokeDasharray="280"
+                animate={{ strokeDashoffset: [280, 0, 0, 280] }}
+                transition={{ repeat: Infinity, duration: 4, times: [0, 0.55, 0.75, 1], ease: 'easeInOut' }}
+              />
+
+            </svg>
+          </motion.div>
+
+          <div className="liquid-text-wrapper">
+            <h1 className="liquid-text">
               ALBIN <span className="amp">&</span> ANITHA
-              {/* Shimmer sweep effect */}
-              <div className="text-shimmer" />
-            </div>
-          </h1>
+              <div
+                className="liquid-fill"
+                style={{ width: `${progress}%` }}
+              >
+                <div className="liquid-fill-inner">
+                  ALBIN <span className="amp">&</span> ANITHA
+                </div>
+                <div className="text-shimmer" />
+              </div>
+            </h1>
+          </div>
         </div>
-        
+
         <div className="date-badge">
           <motion.span
-            animate={{ 
+            animate={{
               opacity: [0.2, 1, 0.2],
               scale: [0.98, 1.02, 0.98]
             }}
@@ -140,17 +181,18 @@ const TOTAL_SLIDES = 3;
 const SWIPE_THRESHOLD = 40;
 
 const ASSETS = [
-  '/assets/topborder.png',
-  '/assets/hhh.png',
-  '/assets/borderside.png',
-  '/assets/one.png',
-  '/assets/bottomframe1.png',
-  '/assets/two.png',
-  '/assets/drawcouple.png',
-  '/assets/leftF.png',
-  '/assets/rightF.png',
-  '/assets/clienthero.png',
-  '/assets/client_details.png'
+  '/assets/topborder.webp',
+  '/assets/hhh.webp',
+  '/assets/borderside.webp',
+  '/assets/one.webp',
+  '/assets/bottomframe1.webp',
+  '/assets/two.webp',
+  '/assets/drawcouple.webp',
+  '/assets/leftF.webp',
+  '/assets/rightF.webp',
+  '/assets/clienthero.webp',
+  '/assets/client_details.webp',
+  '/assets/song.mp3'
 ];
 
 export default function App() {
@@ -158,8 +200,11 @@ export default function App() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [horizontalComplete, setHorizontalComplete] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const touchStartRef = useRef(0);
   const isAnimating = useRef(false);
+  const frameRef = useRef(null);
+  const audioRef = useRef(null);
 
   const handleAddToCalendar = (e) => {
     e.preventDefault();
@@ -199,22 +244,41 @@ export default function App() {
     const totalAssets = ASSETS.length;
 
     const preloadImage = (src) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = () => {
-          loadedCount++;
-          setLoadingProgress((loadedCount / totalAssets) * 100);
-          resolve();
-        };
-        img.onerror = resolve; // Continue even if one fails
+      return new Promise((resolve) => {
+        const isAudio = src.endsWith('.mp3');
+        if (isAudio) {
+          const audio = new Audio();
+          audio.src = src;
+          audio.oncanplaythrough = audio.onerror = () => {
+            loadedCount++;
+            setLoadingProgress((loadedCount / totalAssets) * 100);
+            resolve();
+          };
+        } else {
+          const img = new Image();
+          img.src = src;
+          img.onload = img.onerror = () => {
+            loadedCount++;
+            setLoadingProgress((loadedCount / totalAssets) * 100);
+            resolve();
+          };
+        }
       });
     };
 
     Promise.all(ASSETS.map(src => preloadImage(src))).then(() => {
-      setTimeout(() => setIsLoading(false), 1000); // Small buffer for smoothness
+      setTimeout(() => setIsLoading(false), 1500); 
     });
   }, []);
+
+  // Attempt autoplay when loader finishes
+  useEffect(() => {
+    if (!isLoading && isPlaying && audioRef.current) {
+      audioRef.current.play().catch(() => {
+        console.log("Autoplay blocked - waiting for interaction");
+      });
+    }
+  }, [isLoading, isPlaying]);
 
   const goToSlide = useCallback((index) => {
     if (isAnimating.current) return;
@@ -222,8 +286,11 @@ export default function App() {
 
     isAnimating.current = true;
     setCurrentSlide(index);
+    if (audioRef.current && audioRef.current.paused && isPlaying) {
+      audioRef.current.play().catch(() => {});
+    }
     setTimeout(() => { isAnimating.current = false; }, 1200);
-  }, []);
+  }, [isPlaying]);
 
   // HORIZONTAL MODE: Lock scroll and capture swipes
   useEffect(() => {
@@ -242,9 +309,14 @@ export default function App() {
           goToSlide(currentSlide + 1);
         } else {
           // Last slide → release to vertical scroll
-          setHorizontalComplete(true);
+          document.documentElement.style.scrollBehavior = 'auto';
           document.body.style.overflow = '';
           document.body.style.touchAction = '';
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+          window.scrollTo(0, 0);
+          document.documentElement.style.scrollBehavior = '';
+          setHorizontalComplete(true);
         }
       } else if (e.deltaY < 0) {
         if (currentSlide > 0) {
@@ -272,9 +344,14 @@ export default function App() {
         if (currentSlide < TOTAL_SLIDES - 1) {
           goToSlide(currentSlide + 1);
         } else {
-          setHorizontalComplete(true);
+          document.documentElement.style.scrollBehavior = 'auto';
           document.body.style.overflow = '';
           document.body.style.touchAction = '';
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+          window.scrollTo(0, 0);
+          document.documentElement.style.scrollBehavior = '';
+          setHorizontalComplete(true);
         }
       } else {
         // Swiped DOWN → prev slide
@@ -298,6 +375,21 @@ export default function App() {
       document.body.style.touchAction = '';
     };
   }, [currentSlide, horizontalComplete, goToSlide]);
+
+  // Force scroll to top when 4th section appears
+  useEffect(() => {
+    if (!horizontalComplete) return;
+    const resetScroll = () => {
+      document.documentElement.style.scrollBehavior = 'auto';
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      window.scrollTo(0, 0);
+      if (frameRef.current) frameRef.current.scrollTop = 0;
+      document.documentElement.style.scrollBehavior = '';
+    };
+    resetScroll();
+    requestAnimationFrame(resetScroll);
+  }, [horizontalComplete]);
 
   // Re-enter horizontal mode when user scrolls back to very top
   useEffect(() => {
@@ -325,240 +417,335 @@ export default function App() {
   return (
     <>
       <Preloader progress={loadingProgress} visible={isLoading} />
+      
+      <audio 
+        ref={audioRef}
+        src="/assets/song.mp3"
+        loop
+      />
+
 
       <motion.main
+        ref={frameRef}
         key="main"
+        className="app-frame"
         initial={{ opacity: 0, scale: 1.05 }}
         animate={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 1.05 : 1 }}
         transition={{ duration: 1.2, delay: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
       >
-      {/* ===== FULLSCREEN MORPH SLIDER ===== */}
-      <AnimatePresence>
-        {!horizontalComplete && (
-          <div className="horizontal-slider-fixed" key="slider-wrapper">
-
-            {/* SLIDE 1: HERO */}
-            <AnimatePresence>
-              {currentSlide === 0 && (
-                <motion.section
-                  key="slide-0"
-                  className="hero-section morph-slide"
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-                >
-                  <motion.img
-                    src="/assets/topborder.png"
-                    className="top-border-asset"
-                    initial={{ y: -200, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -200, opacity: 0 }}
-                    transition={{ duration: 0.7, ease: 'easeIn' }}
-                    alt=""
-                  />
-                  <div className="hero-image-container">
-                    <div className="gold-frame" />
-                    <div className="hero-image-wrapper">
-                      <img src="/assets/hhh.png" className="hero-image" alt="Albin and Anitha" />
-                      <div className="hero-gradient-overlay" />
-                      <div className="hero-vignette" />
-                    </div>
-                  </div>
-                  <motion.img
-                    src="/assets/borderside.png"
-                    className="side-border-left"
-                    initial={{ x: -100, opacity: 0, scaleX: -1 }}
-                    animate={{ x: 0, opacity: 1, scaleX: -1 }}
-                    exit={{ y: 200, opacity: 0, scaleX: -1 }}
-                    transition={{ duration: 0.7, ease: 'easeIn' }}
-                    alt=""
-                  />
-                  <motion.img
-                    src="/assets/borderside.png"
-                    className="side-border-right"
-                    initial={{ x: 100, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ y: 200, opacity: 0 }}
-                    transition={{ duration: 0.7, ease: 'easeIn' }}
-                    alt=""
-                  />
-                  <motion.div
-                    className="hero-text-overlay"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                  >
-                    <p className="wedding-of-text">The Engagement of</p>
-                    <h1 className="couple-names">
-                      Albin
-                      <motion.span
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                        style={{ display: 'inline-block', margin: '0 0.5rem', color: 'var(--accent-gold)', fontSize: '0.8em' }}
-                      >❤</motion.span>
-                      Anitha
-                    </h1>
-                    <div className="date-separator">
-                      <div className="line" />
-                      <span className="date-text">09/05/2026</span>
-                      <div className="line" />
-                    </div>
-                  </motion.div>
-                </motion.section>
+        <motion.div 
+          className="music-control"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: isLoading ? 0 : 1, x: 0 }}
+          transition={{ delay: 2.5 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (isPlaying) {
+              audioRef.current.pause();
+              setIsPlaying(false);
+            } else {
+              audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+            }
+          }}
+          title={isPlaying ? "Stop Music" : "Play Music"}
+        >
+          <div className="music-icon-wrapper">
+            <div className={`speaker-icon ${!isPlaying ? 'muted' : ''}`}>
+              {isPlaying ? (
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <line x1="23" y1="9" x2="17" y2="15"></line>
+                  <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
               )}
-
-              {/* SLIDE 2: THE JOURNEY */}
-              {currentSlide === 1 && (
-                <motion.section
-                  key="slide-1"
-                  className="hero-section morph-slide"
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-                >
-                  <FloralDecor variant="top-only" />
-                  <div className="hero-image-container">
-                    <div className="gold-frame" />
-                    <div className="hero-image-wrapper">
-                      <img src="/assets/one.png" className="hero-image" alt="Love Story" />
-                      <div className="hero-gradient-overlay" />
-                      <div className="hero-vignette" />
-                    </div>
-                  </div>
-                  <motion.div
-                    className="hero-text-overlay"
-                    style={{ marginBottom: '3rem' }}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                  >
-                    <p className="wedding-of-text">Two Hearts</p>
-                    <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>One Journey</h2>
-                  </motion.div>
-                </motion.section>
-              )}
-
-              {/* SLIDE 3: THE PROMISE */}
-              {currentSlide === 2 && (
-                <motion.section
-                  key="slide-2"
-                  className="hero-section morph-slide"
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-                >
-                  <FloralDecor variant="reversed" />
-                  <div className="hero-image-container">
-                    <div className="gold-frame" />
-                    <div className="hero-image-wrapper">
-                      <img src="/assets/two.png" className="hero-image" alt="Engagement Day" />
-                      <div className="hero-gradient-overlay" />
-                      <div className="hero-vignette" />
-                    </div>
-                  </div>
-                  <motion.div
-                    className="hero-text-overlay"
-                    style={{ marginBottom: '3rem' }}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                  >
-                    <p className="wedding-of-text">Silent Vows</p>
-                    <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Endless Love</h2>
-                  </motion.div>
-                </motion.section>
-              )}
-            </AnimatePresence>
-
-            {/* Persistent Bottom Frame — stays across slide 2 & 3 transitions */}
-            <motion.img
-              src="/assets/bottomframe1.png"
-              className="bottom-border-asset"
-              initial={{ y: 300, opacity: 0 }}
-              animate={{ y: currentSlide >= 1 ? 0 : 300, opacity: currentSlide >= 1 ? 1 : 0 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-              style={{ zIndex: 50 }}
-              alt=""
-            />
-
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* ===== CONSOLIDATED INVITATION ===== */}
-      <section className="reception-section" id="reception">
-        <div className="premium-reception-container">
-
-          {/* Corner Florals (clipped inside box) */}
-          <img src="/assets/rightF.png" className="box-floral box-floral-top-right" alt="" />
-          <img src="/assets/leftF.png" className="box-floral box-floral-bottom-left" alt="" />
-
-          {/* Couple Sketch */}
-          <div className="reception-hero-block">
-            <div className="reception-integrated-illustration">
-              <img src="/assets/drawcouple.png" alt="Couple Sketch" className="couple-sketch-integrated" />
-            </div>
-            <div className="reception-header">
-              <span className="subtitle-gold">SAVE THE DATE FOR THE</span>
-              <h2 className="title-serif-large">Engagement Day</h2>
             </div>
           </div>
+        </motion.div>
+        {/* ===== FULLSCREEN MORPH SLIDER ===== */}
+        <AnimatePresence>
+          {!horizontalComplete && (
+            <motion.div className="horizontal-slider-fixed" key="slider-wrapper" exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
 
-          <div className="ornamental-divider"><div className="line" /><div className="diamond" /><div className="line" /></div>
+              {/* SLIDE 1: HERO */}
+              <AnimatePresence>
+                {currentSlide === 0 && (
+                  <motion.section
+                    key="slide-0"
+                    className="hero-section morph-slide"
+                    initial={{ opacity: 0, scale: 1.08 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1 }}
+                    transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <motion.img
+                      src="/assets/topborder.webp"
+                      className="top-border-asset"
+                      initial={{ y: -200, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -200, opacity: 0 }}
+                      transition={{ duration: 0.7, ease: 'easeIn' }}
+                      alt=""
+                    />
+                    <div className="hero-image-container">
+                      <div className="gold-frame" />
+                      <div className="hero-image-wrapper">
+                        <img src="/assets/hhh.webp" className="hero-image" alt="Albin and Anitha" />
+                        <div className="hero-gradient-overlay" />
+                        <div className="hero-vignette" />
+                      </div>
+                    </div>
+                    <motion.div
+                      className="hero-text-overlay"
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                    >
+                      <p className="wedding-of-text">The Engagement of</p>
+                      <div className="couple-names-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+                        <SplitText
+                          text="Albin"
+                          className="couple-names"
+                          delay={35}
+                          duration={1.5}
+                          ease="expo.out"
+                          from={{ opacity: 0, x: -50, filter: 'blur(10px)' }}
+                          to={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                        />
+                        <motion.span
+                          className="heart-icon heart-size"
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                          style={{ display: 'inline-block', color: 'var(--accent-gold)' }}
+                        >❤</motion.span>
+                        <SplitText
+                          text="Anitha"
+                          className="couple-names"
+                          delay={35}
+                          duration={1.5}
+                          ease="expo.out"
+                          from={{ opacity: 0, x: 50, filter: 'blur(10px)' }}
+                          to={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                        />
+                      </div>
+                      <div className="date-separator">
+                        <div className="line" />
+                        <span className="date-text">09 May 2026</span>
+                        <div className="line" />
+                      </div>
+                    </motion.div>
+                  </motion.section>
+                )}
 
-          {/* Date & Time */}
-          <div className="reception-grid">
-            <div className="date-block-premium">
-              <p className="month">MAY</p>
-              <div className="day-number-wrapper">
-                <div className="side-line" />
-                <p className="day-number">09</p>
-                <div className="side-line" />
+                {/* SLIDE 2: THE JOURNEY */}
+                {currentSlide === 1 && (
+                  <motion.section
+                    key="slide-1"
+                    className="hero-section morph-slide"
+                    initial={{ opacity: 0, scale: 1.08 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1 }}
+                    transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <FloralDecor variant="top-only" />
+                    <div className="hero-image-container">
+                      <div className="gold-frame" />
+                      <div className="hero-image-wrapper">
+                        <img src="/assets/one.webp" className="hero-image" alt="Love Story" />
+                        <div className="hero-gradient-overlay" />
+                        <div className="hero-vignette" />
+                      </div>
+                    </div>
+                    <motion.div
+                      className="hero-text-overlay"
+                      style={{ marginBottom: '3rem' }}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                    >
+                      <p className="wedding-of-text">Two Hearts</p>
+                      <SplitText
+                        text="One Journey"
+                        className="couple-names couple-names-slide"
+                        delay={30}
+                        duration={1.5}
+                        ease="expo.out"
+                      />
+                    </motion.div>
+                  </motion.section>
+                )}
+
+                {/* SLIDE 3: THE PROMISE */}
+                {currentSlide === 2 && (
+                  <motion.section
+                    key="slide-2"
+                    className="hero-section morph-slide"
+                    initial={{ opacity: 0, scale: 1.08 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1 }}
+                    transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <FloralDecor variant="reversed" />
+                    <div className="hero-image-container">
+                      <div className="gold-frame" />
+                      <div className="hero-image-wrapper">
+                        <img src="/assets/two.webp" className="hero-image" alt="Engagement Day" />
+                        <div className="hero-gradient-overlay" />
+                        <div className="hero-vignette" />
+                      </div>
+                    </div>
+                    <motion.div
+                      className="hero-text-overlay"
+                      style={{ marginBottom: '3rem' }}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                    >
+                      <p className="wedding-of-text">Silent Vows</p>
+                      <SplitText
+                        text="Endless Love"
+                        className="couple-names couple-names-slide"
+                        delay={30}
+                        duration={1.5}
+                        ease="expo.out"
+                      />
+                    </motion.div>
+                  </motion.section>
+                )}
+              </AnimatePresence>
+
+              {/* Side borders — outside slide section so they stack above the bottom frame */}
+              <AnimatePresence>
+                {currentSlide === 0 && (
+                  <>
+                    <motion.img
+                      key="side-left"
+                      src="/assets/borderside.webp"
+                      className="side-border-left"
+                      initial={{ x: -100, opacity: 0, scaleX: -1 }}
+                      animate={{ x: 0, opacity: 1, scaleX: -1 }}
+                      exit={{ y: 200, opacity: 0, scaleX: -1 }}
+                      transition={{ duration: 0.7, ease: 'easeOut' }}
+                      style={{ zIndex: 55 }}
+                      alt=""
+                    />
+                    <motion.img
+                      key="side-right"
+                      src="/assets/borderside.webp"
+                      className="side-border-right"
+                      initial={{ x: 100, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ y: 200, opacity: 0 }}
+                      transition={{ duration: 0.7, ease: 'easeOut' }}
+                      style={{ zIndex: 55 }}
+                      alt=""
+                    />
+                  </>
+                )}
+              </AnimatePresence>
+
+              {/* Persistent Bottom Frame — stays across slide 2 & 3 transitions */}
+              <motion.img
+                src="/assets/bottomframe1.webp"
+                className="bottom-border-asset"
+                initial={{ y: 300, opacity: 0 }}
+                animate={{ y: currentSlide >= 1 ? 0 : 300, opacity: currentSlide >= 1 ? 1 : 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                style={{ zIndex: 50 }}
+                alt=""
+              />
+
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ===== CONSOLIDATED INVITATION ===== */}
+        <motion.section
+          className="reception-section"
+          id="reception"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: horizontalComplete ? 1 : 0, y: horizontalComplete ? 0 : 40 }}
+          transition={{ duration: 1.0, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
+        >
+          <div className="premium-reception-container">
+
+            {/* Corner Florals (clipped inside box) */}
+            <img src="/assets/rightF.webp" className="box-floral box-floral-top-right" alt="" />
+            <img src="/assets/leftF.webp" className="box-floral box-floral-bottom-left" alt="" />
+
+            {/* Couple Sketch */}
+            <div className="reception-hero-block">
+              <div className="reception-integrated-illustration">
+                <img src="/assets/drawcouple.webp" alt="Couple Sketch" className="couple-sketch-integrated" />
               </div>
-              <p className="year">2026</p>
-              <p className="day-name">SATURDAY</p>
-            </div>
-
-            <div className="info-block-premium">
-              <div className="time-info">
-                <p className="label">JOIN US AT</p>
-                <p className="value">12:00 PM</p>
-                <p className="sub-value">MIDDAY</p>
+              <div className="reception-header">
+                <span className="subtitle-gold">SAVE THE DATE FOR THE</span>
+                <SplitText
+                  text="Engagement Day"
+                  className="title-serif-large"
+                  delay={40}
+                  duration={1.8}
+                  ease="expo.out"
+                />
               </div>
-              <a 
-                href="#"
-                onClick={handleAddToCalendar}
-                className="btn-luxury"
-              >
-                <span>ADD TO CALENDAR</span>
-              </a>
             </div>
+
+            <div className="ornamental-divider"><div className="line" /><div className="diamond" /><div className="line" /></div>
+
+            {/* Date & Time */}
+            <div className="reception-grid">
+              <div className="date-block-premium">
+                <p className="month">MAY</p>
+                <div className="day-number-wrapper">
+                  <div className="side-line" />
+                  <p className="day-number">09</p>
+                  <div className="side-line" />
+                </div>
+                <p className="year">2026</p>
+                <p className="day-name">SATURDAY</p>
+              </div>
+
+              <div className="info-block-premium">
+                <div className="time-info">
+                  <p className="label">JOIN US AT</p>
+                  <p className="value">12:00 <span className="time-period">PM</span></p>
+                  <p className="sub-value">MIDDAY</p>
+                </div>
+                <a
+                  href="#"
+                  onClick={handleAddToCalendar}
+                  className="btn-luxury"
+                >
+                  <span>ADD TO CALENDAR</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="ornamental-divider"><div className="line" /><div className="diamond" /><div className="line" /></div>
+
+            {/* Location */}
+            <div className="location-info-integrated">
+              <span className="subtitle-gold">THE LOCATION</span>
+              <h3 className="title-serif" style={{ fontSize: '1.8rem', color: '#fff', margin: '0.3rem 0' }}>Marth Mariyam Town Church</h3>
+              <p style={{ fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.6, margin: '0.3rem 0 1.5rem' }}>
+                Muttom<br />Thodupuzha, Kerala
+              </p>
+              <a href="https://maps.app.goo.gl/pbD51AZLsYnMMdgL7" target="_blank" rel="noopener noreferrer" className="btn-luxury"><span>VIEW ON MAP</span></a>
+            </div>
+
+            {/* Sign-off */}
+            <div className="simple-signoff">
+              <p className="title-script" style={{ fontSize: '2.5rem', color: '#fff' }}>Thank You</p>
+              <p className="subtitle-gold" style={{ opacity: 0.5, marginTop: '0.3rem' }}>Albin, Anitha & Family</p>
+            </div>
+
           </div>
-
-          <div className="ornamental-divider"><div className="line" /><div className="diamond" /><div className="line" /></div>
-
-          {/* Location */}
-          <div className="location-info-integrated">
-            <span className="subtitle-gold">THE LOCATION</span>
-            <h3 className="title-serif" style={{ fontSize: '1.8rem', color: '#fff', margin: '0.3rem 0' }}>Marth Mariyam Town Church</h3>
-            <p style={{ fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.6, margin: '0.3rem 0 1.5rem' }}>
-              Muttom<br />Thodupuzha, Kerala
-            </p>
-            <a href="https://maps.app.goo.gl/pbD51AZLsYnMMdgL7" target="_blank" rel="noopener noreferrer" className="btn-luxury"><span>VIEW ON MAP</span></a>
-          </div>
-
-          {/* Sign-off */}
-          <div className="simple-signoff">
-            <p className="title-script" style={{ fontSize: '2.5rem', color: '#fff' }}>Thank You</p>
-            <p className="subtitle-gold" style={{ opacity: 0.5, marginTop: '0.3rem' }}>Albin, Anitha & Family</p>
-          </div>
-
-        </div>
-      </section>
-        </motion.main>
+        </motion.section>
+      </motion.main>
     </>
   );
 }

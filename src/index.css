@@ -8,7 +8,7 @@
   --text-muted: #cad2c5;
   --font-serif: "Cormorant Garamond", serif;
   --font-script: "EB Garamond", serif;
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Manrope", sans-serif;
 }
 
 html {
@@ -235,7 +235,7 @@ section {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle, transparent 30%, rgba(255, 255, 255, 0.5) 100%);
+  background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
   z-index: 12;
   pointer-events: none;
 }
@@ -261,7 +261,8 @@ section {
   font-size: 0.95rem;
   font-weight: 300;
   letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffcc66;
+  font-weight: 600;
   margin-bottom: 0.15rem;
   text-transform: none;
 }
@@ -384,7 +385,7 @@ section {
 }
 
 .reception-section {
-  background: linear-gradient(rgba(10, 46, 41, 0.7), rgba(10, 46, 41, 0.7)), url('/assets/clienthero.png');
+  background: linear-gradient(rgba(10, 46, 41, 0.7), rgba(10, 46, 41, 0.7)), url('/assets/clienthero.webp');
   background-size: cover;
   background-position: center;
   min-height: auto;
@@ -394,7 +395,7 @@ section {
 }
 
 .location-section {
-  background: linear-gradient(rgba(10, 46, 41, 0.8), rgba(10, 46, 41, 0.8)), url('/assets/client_details.png');
+  background: linear-gradient(rgba(10, 46, 41, 0.8), rgba(10, 46, 41, 0.8)), url('/assets/client_details.webp');
   background-size: cover;
   background-position: center;
 }
@@ -485,6 +486,8 @@ section {
   left: 0;
   width: 100%;
   height: 100%;
+  will-change: transform, opacity;
+  transform-origin: center center;
 }
 
 /* Progress Dots */
@@ -882,6 +885,16 @@ textarea.input-field {
   font-family: var(--font-serif);
   color: #fff;
   line-height: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.time-info .value .time-period {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
 }
 
 .time-info .sub-value {
@@ -975,7 +988,9 @@ textarea.input-field {
   font-family: var(--font-serif);
   font-size: 0.75rem;
   letter-spacing: 4px;
-  color: var(--accent-gold);
+  color: #ffcc66;
+  /* Brighter gold/yellow */
+  font-weight: 600;
   text-transform: uppercase;
   margin-bottom: 0.3rem;
 }
@@ -1039,6 +1054,101 @@ textarea.input-field {
   overflow: hidden;
 }
 
+/* ===== MUSIC CONTROL ===== */
+.music-control {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  z-index: 9999;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px solid rgba(197, 160, 89, 0.5);
+  padding: 8px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+}
+
+.music-icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.speaker-icon {
+  display: flex;
+  align-items: center;
+  color: var(--accent-gold);
+}
+
+.music-bars.small {
+  height: 12px;
+  gap: 2px;
+}
+
+.music-bars.small span {
+  width: 1.5px;
+}
+
+.music-bars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+}
+
+.music-bars span {
+  width: 2px;
+  background: var(--accent-gold);
+  border-radius: 1px;
+  height: 8px;
+  /* Default height */
+}
+
+/* Playing state with staggered rhythmic pulse */
+.music-bars:not(.paused) span {
+  animation: bar-pulse 0.8s infinite ease-in-out alternate;
+}
+
+.music-bars:not(.paused) span:nth-child(1) {
+  animation-duration: 0.8s;
+  animation-delay: 0.1s;
+}
+
+.music-bars:not(.paused) span:nth-child(2) {
+  animation-duration: 0.5s;
+  animation-delay: 0.3s;
+}
+
+.music-bars:not(.paused) span:nth-child(3) {
+  animation-duration: 0.9s;
+  animation-delay: 0.0s;
+}
+
+.music-bars:not(.paused) span:nth-child(4) {
+  animation-duration: 0.6s;
+  animation-delay: 0.2s;
+}
+
+.music-bars.paused span {
+  height: 3px !important;
+  opacity: 0.5;
+}
+
+@keyframes bar-pulse {
+  0% {
+    height: 6px;
+  }
+
+  100% {
+    height: 18px;
+  }
+}
+
 .preloader-floral {
   position: absolute;
   width: 500px;
@@ -1079,19 +1189,34 @@ textarea.input-field {
   max-width: 800px;
 }
 
+.preloader-heart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.4));
+}
+
 .liquid-text {
   font-family: var(--font-serif);
-  font-size: clamp(1.4rem, 6vw, 4rem);
+  font-size: clamp(1.4rem, 5.5vw, 4rem);
   /* Slightly smaller base for better fit */
   font-weight: 200;
   color: rgba(255, 255, 255, 0.05);
   position: relative;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  margin: 0;
-  width: 100%;
+  display: inline-block;
   white-space: nowrap;
+  padding-right: 0.2em;
+  /* Prevents last character from being cut off */
   /* Prevents text from breaking */
+}
+
+.liquid-text-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .liquid-text .amp {
@@ -1110,9 +1235,16 @@ textarea.input-field {
   color: var(--accent-gold);
   overflow: hidden;
   white-space: nowrap;
-  border-right: 1px solid var(--accent-gold);
+  border-right: 2px solid var(--accent-gold);
   transition: width 0.3s ease-out;
   text-shadow: 0 0 15px rgba(197, 160, 89, 0.5);
+  box-sizing: border-box;
+}
+
+.liquid-fill-inner {
+  width: 100%;
+  white-space: nowrap;
+  padding-right: 0.2em;
 }
 
 .date-badge {
@@ -1167,5 +1299,125 @@ textarea.input-field {
   .vine-flourish {
     width: 280px;
     top: -40px;
+  }
+}
+
+/* ===== DESKTOP / TABLET: PHONE FRAME ===== */
+@media (min-width: 481px) {
+  body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 100vh;
+    background: #020d0b;
+    overflow-x: hidden;
+  }
+
+  .app-frame {
+    width: 400px;
+    min-height: 100dvh;
+    position: relative;
+    overflow: hidden;
+    border-radius: 40px;
+    box-shadow: 0 0 0 1px rgba(197, 160, 89, 0.25), 0 30px 100px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Slider: fixed but constrained to the phone frame width + centered */
+  .horizontal-slider-fixed {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 100dvh;
+    border-radius: 40px;
+    overflow: hidden;
+  }
+
+  /* ── Reset desktop layout overrides back to mobile style ── */
+  .hero-section {
+    background: linear-gradient(180deg,
+        #5a7a6a 0%, #4a6a5a 15%, #3a5548 30%,
+        #2a4038 50%, #1a2e28 70%, #0f1f1c 85%, #0a1614 100%);
+    padding-top: 0;
+    justify-content: flex-start;
+  }
+
+  .hero-image-container {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+
+  .hero-text-overlay {
+    position: absolute !important;
+    bottom: 100px !important;
+    margin-top: 0 !important;
+  }
+
+  .hero-text-overlay .couple-names {
+    font-size: 2.7rem !important;
+    font-family: var(--font-script) !important;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  .couple-names-slide {
+    font-size: 2.4rem !important;
+  }
+
+  .heart-size {
+    font-size: 1.5rem !important;
+  }
+
+  .top-border-asset {
+    display: block !important;
+  }
+
+  .side-border-left {
+    width: 170px !important;
+    left: -40px !important;
+    bottom: 0 !important;
+    scale: 1.5 !important;
+    transform: translate(0%, 20%) scaleX(-1) !important;
+    z-index: 45 !important;
+  }
+
+  .side-border-right {
+    width: 170px !important;
+    right: -40px !important;
+    bottom: 0 !important;
+    scale: 1.5 !important;
+    transform: translate(0%, 10%) !important;
+    z-index: 45 !important;
+  }
+
+  .gold-frame {
+    bottom: 110px !important;
+    top: 80px !important;
+  }
+
+  .premium-reception-container {
+    max-width: 100% !important;
+    width: 90% !important;
+    padding: 3rem 2rem !important;
+    border-radius: 30px !important;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .title-serif-large {
+    font-size: 2.2rem !important;
+  }
+
+  .liquid-text {
+    font-size: 1.6rem !important;
   }
 }

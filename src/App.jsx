@@ -222,7 +222,7 @@ export default function App() {
 
     isAnimating.current = true;
     setCurrentSlide(index);
-    setTimeout(() => { isAnimating.current = false; }, 700);
+    setTimeout(() => { isAnimating.current = false; }, 1200);
   }, []);
 
   // HORIZONTAL MODE: Lock scroll and capture swipes
@@ -332,146 +332,159 @@ export default function App() {
         animate={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 1.05 : 1 }}
         transition={{ duration: 1.2, delay: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
       >
-      {/* ===== FULLSCREEN HORIZONTAL SLIDER ===== */}
+      {/* ===== FULLSCREEN MORPH SLIDER ===== */}
       <AnimatePresence>
         {!horizontalComplete && (
-          <motion.div
-            className="horizontal-slider-fixed"
-            key="horizontal-slider"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-          >
-            <div
-              className="horizontal-belt"
-              style={{ transform: `translateX(-${currentSlide * 100}vw)` }}
-            >
-              {/* SLIDE 1: HERO */}
-              <section className="hero-section">
-                <motion.img
-                  src="/assets/topborder.png"
-                  className="top-border-asset"
-                  animate={{ y: currentSlide > 0 ? -200 : 0 }}
-                  transition={{ duration: 0.6, ease: 'easeOut' }}
-                  alt=""
-                />
-                <div className="hero-image-container">
-                  <div className="gold-frame" />
-                  <div className="hero-image-wrapper">
-                    <img src="/assets/hhh.png" className="hero-image" alt="Albin and Anitha" />
-                    <div className="hero-gradient-overlay" />
-                    <div className="hero-vignette" />
+          <div className="horizontal-slider-fixed" key="slider-wrapper">
+
+            {/* SLIDE 1: HERO */}
+            <AnimatePresence>
+              {currentSlide === 0 && (
+                <motion.section
+                  key="slide-0"
+                  className="hero-section morph-slide"
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+                >
+                  <motion.img
+                    src="/assets/topborder.png"
+                    className="top-border-asset"
+                    initial={{ y: -200, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -200, opacity: 0 }}
+                    transition={{ duration: 0.7, ease: 'easeIn' }}
+                    alt=""
+                  />
+                  <div className="hero-image-container">
+                    <div className="gold-frame" />
+                    <div className="hero-image-wrapper">
+                      <img src="/assets/hhh.png" className="hero-image" alt="Albin and Anitha" />
+                      <div className="hero-gradient-overlay" />
+                      <div className="hero-vignette" />
+                    </div>
                   </div>
-                </div>
-                <img src="/assets/borderside.png" className="side-border-left" alt="" />
-                <img src="/assets/borderside.png" className="side-border-right" alt="" />
-                <div className="hero-text-overlay">
-                  <p className="wedding-of-text">The Engagement of</p>
-                  <h1 className="couple-names">
-                    Albin
-                    <motion.span
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 1.5,
-                        ease: "easeInOut"
-                      }}
-                      style={{
-                        display: 'inline-block',
-                        margin: '0 0.5rem',
-                        color: 'var(--accent-gold)',
-                        fontSize: '0.8em'
-                      }}
-                    >
-                      ❤
-                    </motion.span>
-                    Anitha
-                  </h1>
-                  <div className="date-separator">
-                    <div className="line" />
-                    <span className="date-text">09/05/2026</span>
-                    <div className="line" />
-                  </div>
-                </div>
-              </section>
+                  <motion.img
+                    src="/assets/borderside.png"
+                    className="side-border-left"
+                    initial={{ x: -100, opacity: 0, scaleX: -1 }}
+                    animate={{ x: 0, opacity: 1, scaleX: -1 }}
+                    exit={{ y: 200, opacity: 0, scaleX: -1 }}
+                    transition={{ duration: 0.7, ease: 'easeIn' }}
+                    alt=""
+                  />
+                  <motion.img
+                    src="/assets/borderside.png"
+                    className="side-border-right"
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ y: 200, opacity: 0 }}
+                    transition={{ duration: 0.7, ease: 'easeIn' }}
+                    alt=""
+                  />
+                  <motion.div
+                    className="hero-text-overlay"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                  >
+                    <p className="wedding-of-text">The Engagement of</p>
+                    <h1 className="couple-names">
+                      Albin
+                      <motion.span
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                        style={{ display: 'inline-block', margin: '0 0.5rem', color: 'var(--accent-gold)', fontSize: '0.8em' }}
+                      >❤</motion.span>
+                      Anitha
+                    </h1>
+                    <div className="date-separator">
+                      <div className="line" />
+                      <span className="date-text">09/05/2026</span>
+                      <div className="line" />
+                    </div>
+                  </motion.div>
+                </motion.section>
+              )}
 
               {/* SLIDE 2: THE JOURNEY */}
-              <section className="hero-section">
-                <FloralDecor variant="top-only" />
-                <div className="hero-image-container">
-                  <div className="gold-frame" />
-                  <div className="hero-image-wrapper">
-                    <img src="/assets/one.png" className="hero-image" alt="Love Story" />
-                    <div className="hero-gradient-overlay" />
-                    <div className="hero-vignette" />
+              {currentSlide === 1 && (
+                <motion.section
+                  key="slide-1"
+                  className="hero-section morph-slide"
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+                >
+                  <FloralDecor variant="top-only" />
+                  <div className="hero-image-container">
+                    <div className="gold-frame" />
+                    <div className="hero-image-wrapper">
+                      <img src="/assets/one.png" className="hero-image" alt="Love Story" />
+                      <div className="hero-gradient-overlay" />
+                      <div className="hero-vignette" />
+                    </div>
                   </div>
-                </div>
-                <motion.img
-                  src="/assets/borderside.png"
-                  className="side-border-left"
-                  animate={{ y: currentSlide >= 1 ? 200 : 0, scaleX: -1 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
-                  alt=""
-                />
-                <motion.img
-                  src="/assets/borderside.png"
-                  className="side-border-right"
-                  animate={{ y: currentSlide >= 1 ? 200 : 0 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
-                  alt=""
-                />
-                <motion.img
-                  src="/assets/bottomframe1.png"
-                  className="bottom-border-asset"
-                  animate={{ y: currentSlide >= 1 ? 0 : 300 }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  alt=""
-                />
-                <div className="hero-text-overlay" style={{ marginBottom: '3rem' }}>
-                  <p className="wedding-of-text">Our Journey</p>
-                  <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Beautiful Moments</h2>
-                </div>
-              </section>
+                  <motion.div
+                    className="hero-text-overlay"
+                    style={{ marginBottom: '3rem' }}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                  >
+                    <p className="wedding-of-text">Two Hearts</p>
+                    <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>One Journey</h2>
+                  </motion.div>
+                </motion.section>
+              )}
 
               {/* SLIDE 3: THE PROMISE */}
-              <section className="hero-section">
-                <FloralDecor variant="reversed" />
-                <div className="hero-image-container">
-                  <div className="gold-frame" />
-                  <div className="hero-image-wrapper">
-                    <img src="/assets/two.png" className="hero-image" alt="Engagement Day" />
-                    <div className="hero-gradient-overlay" />
-                    <div className="hero-vignette" />
+              {currentSlide === 2 && (
+                <motion.section
+                  key="slide-2"
+                  className="hero-section morph-slide"
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+                >
+                  <FloralDecor variant="reversed" />
+                  <div className="hero-image-container">
+                    <div className="gold-frame" />
+                    <div className="hero-image-wrapper">
+                      <img src="/assets/two.png" className="hero-image" alt="Engagement Day" />
+                      <div className="hero-gradient-overlay" />
+                      <div className="hero-vignette" />
+                    </div>
                   </div>
-                </div>
-                <motion.img
-                  src="/assets/borderside.png"
-                  className="side-border-left"
-                  animate={{ y: currentSlide >= 2 ? 200 : 0, scaleX: -1 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
-                  alt=""
-                />
-                <motion.img
-                  src="/assets/borderside.png"
-                  className="side-border-right"
-                  animate={{ y: currentSlide >= 2 ? 200 : 0 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
-                  alt=""
-                />
-                <motion.img
-                  src="/assets/bottomframe1.png"
-                  className="bottom-border-asset"
-                  animate={{ y: currentSlide >= 2 ? 0 : 300 }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  alt=""
-                />
-                <div className="hero-text-overlay" style={{ marginBottom: '3rem' }}>
-                  <p className="wedding-of-text">Eternal Promise</p>
-                  <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Together Forever</h2>
-                </div>
-              </section>
-            </div>
-          </motion.div>
+                  <motion.div
+                    className="hero-text-overlay"
+                    style={{ marginBottom: '3rem' }}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                  >
+                    <p className="wedding-of-text">Silent Vows</p>
+                    <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Endless Love</h2>
+                  </motion.div>
+                </motion.section>
+              )}
+            </AnimatePresence>
+
+            {/* Persistent Bottom Frame — stays across slide 2 & 3 transitions */}
+            <motion.img
+              src="/assets/bottomframe1.png"
+              className="bottom-border-asset"
+              initial={{ y: 300, opacity: 0 }}
+              animate={{ y: currentSlide >= 1 ? 0 : 300, opacity: currentSlide >= 1 ? 1 : 0 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              style={{ zIndex: 50 }}
+              alt=""
+            />
+
+          </div>
         )}
       </AnimatePresence>
 
@@ -532,7 +545,7 @@ export default function App() {
             <span className="subtitle-gold">THE LOCATION</span>
             <h3 className="title-serif" style={{ fontSize: '1.8rem', color: '#fff', margin: '0.3rem 0' }}>Marth Mariyam Town Church</h3>
             <p style={{ fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.6, margin: '0.3rem 0 1.5rem' }}>
-              Muttom<br />Idukki, Kerala
+              Muttom<br />Thodupuzha, Kerala
             </p>
             <a href="https://maps.app.goo.gl/pbD51AZLsYnMMdgL7" target="_blank" rel="noopener noreferrer" className="btn-luxury"><span>VIEW ON MAP</span></a>
           </div>
@@ -540,7 +553,7 @@ export default function App() {
           {/* Sign-off */}
           <div className="simple-signoff">
             <p className="title-script" style={{ fontSize: '2.5rem', color: '#fff' }}>Thank You</p>
-            <p className="subtitle-gold" style={{ opacity: 0.5, marginTop: '0.3rem' }}>ALBIN & ANITHA • 2026</p>
+            <p className="subtitle-gold" style={{ opacity: 0.5, marginTop: '0.3rem' }}>Albin, Anitha & Family</p>
           </div>
 
         </div>

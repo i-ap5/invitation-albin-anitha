@@ -63,7 +63,7 @@ section {
 .floral-top-left {
   top: -100px;
   left: -100px;
-  transform: rotate(135deg);
+  transform: rotate(35deg);
 }
 
 .floral-bottom-right {
@@ -467,7 +467,7 @@ section {
   }
 }
 
-/* ===== FULLSCREEN HORIZONTAL SLIDER ===== */
+/* ===== FULLSCREEN MORPH SLIDER ===== */
 .horizontal-slider-fixed {
   position: fixed;
   top: 0;
@@ -479,22 +479,12 @@ section {
   background: var(--bg-dark);
 }
 
-.horizontal-belt {
-  display: flex;
-  width: 300vw;
+.morph-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
-  will-change: transform;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-.horizontal-belt section {
-  flex: 0 0 100vw;
-  width: 100vw;
-  height: 100dvh;
-  padding: 0 !important;
-  margin: 0;
 }
 
 /* Progress Dots */
@@ -693,9 +683,7 @@ textarea.input-field {
   .side-border-right {
     width: 450px;
     right: -100px;
-    bottom: -80px;
-    /* Anchored Bottom Right */
-    top: unset;
+    bottom: -60px;
     opacity: 1;
     scale: 1.5;
     transform: translate(0, 0);
@@ -732,7 +720,8 @@ textarea.input-field {
   border-radius: 30px;
   position: relative;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-  overflow: hidden; /* Clips the florals inside the box */
+  overflow: hidden;
+  /* Clips the florals inside the box */
   text-align: center;
 }
 
@@ -779,7 +768,8 @@ textarea.input-field {
   color: #fff;
   line-height: 1.1;
   margin-bottom: 1.5rem;
-  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Stronger shadow for light background */
+  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  /* Stronger shadow for light background */
 }
 
 .ornamental-divider {
@@ -960,7 +950,8 @@ textarea.input-field {
 .reception-integrated-illustration {
   display: flex;
   justify-content: center;
-  width: calc(100% - 30px); /* Align with the inner gold border */
+  width: calc(100% - 30px);
+  /* Align with the inner gold border */
 }
 
 .couple-sketch-integrated {
@@ -1090,7 +1081,8 @@ textarea.input-field {
 
 .liquid-text {
   font-family: var(--font-serif);
-  font-size: clamp(1.4rem, 6vw, 4rem); /* Slightly smaller base for better fit */
+  font-size: clamp(1.4rem, 6vw, 4rem);
+  /* Slightly smaller base for better fit */
   font-weight: 200;
   color: rgba(255, 255, 255, 0.05);
   position: relative;
@@ -1098,7 +1090,8 @@ textarea.input-field {
   text-transform: uppercase;
   margin: 0;
   width: 100%;
-  white-space: nowrap; /* Prevents text from breaking */
+  white-space: nowrap;
+  /* Prevents text from breaking */
 }
 
 .liquid-text .amp {
@@ -1147,19 +1140,22 @@ textarea.input-field {
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(
-    to right, 
-    transparent, 
-    rgba(255, 255, 255, 0.4), 
-    transparent
-  );
+  background: linear-gradient(to right,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent);
   transform: skewX(-25deg);
   animation: shimmer-sweep 3s infinite;
 }
 
 @keyframes shimmer-sweep {
-  0% { left: -100%; }
-  100% { left: 150%; }
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 150%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1167,6 +1163,7 @@ textarea.input-field {
     width: 300px;
     height: 300px;
   }
+
   .vine-flourish {
     width: 280px;
     top: -40px;

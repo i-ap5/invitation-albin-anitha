@@ -131,19 +131,27 @@ export default function App() {
     };
   }, [currentSlide, horizontalComplete, goToSlide]);
 
-  // RE-ENTER horizontal mode when scrolling back to top
+  // Re-enter horizontal mode when user scrolls back to very top
   useEffect(() => {
     if (!horizontalComplete) return;
 
+    let canReEnter = false;
+    const timer = setTimeout(() => { canReEnter = true; }, 1000);
+
     const handleScroll = () => {
-      if (window.scrollY <= 5) {
+      if (canReEnter && window.scrollY <= 2) {
+        canReEnter = false;
+        window.scrollTo(0, 0);
         setHorizontalComplete(false);
         setCurrentSlide(TOTAL_SLIDES - 1);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [horizontalComplete]);
 
   return (
@@ -153,185 +161,212 @@ export default function App() {
       transition={{ duration: 1 }}
     >
       {/* ===== FULLSCREEN HORIZONTAL SLIDER ===== */}
-      {!horizontalComplete && (
-        <div className="horizontal-slider-fixed">
-          <div
-            className="horizontal-belt"
-            style={{ transform: `translateX(-${currentSlide * 100}vw)` }}
+      <AnimatePresence>
+        {!horizontalComplete && (
+          <motion.div
+            className="horizontal-slider-fixed"
+            key="horizontal-slider"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
           >
-            {/* SLIDE 1: HERO */}
-            <section className="hero-section">
-              <motion.img
-                src="/assets/topborder.png"
-                className="top-border-asset"
-                animate={{ y: currentSlide > 0 ? -200 : 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                alt=""
-              />
-              <div className="hero-image-container">
-                <div className="gold-frame" />
-                <div className="hero-image-wrapper">
-                  <img src="/assets/hhh.png" className="hero-image" alt="Albin and Anitha" />
-                  <div className="hero-gradient-overlay" />
-                  <div className="hero-vignette" />
+            <div
+              className="horizontal-belt"
+              style={{ transform: `translateX(-${currentSlide * 100}vw)` }}
+            >
+              {/* SLIDE 1: HERO */}
+              <section className="hero-section">
+                <motion.img
+                  src="/assets/topborder.png"
+                  className="top-border-asset"
+                  animate={{ y: currentSlide > 0 ? -200 : 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  alt=""
+                />
+                <div className="hero-image-container">
+                  <div className="gold-frame" />
+                  <div className="hero-image-wrapper">
+                    <img src="/assets/hhh.png" className="hero-image" alt="Albin and Anitha" />
+                    <div className="hero-gradient-overlay" />
+                    <div className="hero-vignette" />
+                  </div>
                 </div>
-              </div>
-              <img src="/assets/borderside.png" className="side-border-left" alt="" />
-              <img src="/assets/borderside.png" className="side-border-right" alt="" />
-              <div className="hero-text-overlay">
-                <p className="wedding-of-text">The Engagement of</p>
-                <h1 className="couple-names">Albin & Anitha</h1>
-                <div className="date-separator">
-                  <div className="line" />
-                  <span className="date-text">09/05/2026</span>
-                  <div className="line" />
+                <img src="/assets/borderside.png" className="side-border-left" alt="" />
+                <img src="/assets/borderside.png" className="side-border-right" alt="" />
+                <div className="hero-text-overlay">
+                  <p className="wedding-of-text">The Engagement of</p>
+                  <h1 className="couple-names">
+                    Albin
+                    <motion.span
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 1.5,
+                        ease: "easeInOut"
+                      }}
+                      style={{
+                        display: 'inline-block',
+                        margin: '0 0.5rem',
+                        color: 'var(--accent-gold)',
+                        fontSize: '0.8em'
+                      }}
+                    >
+                      ❤
+                    </motion.span>
+                    Anitha
+                  </h1>
+                  <div className="date-separator">
+                    <div className="line" />
+                    <span className="date-text">09/05/2026</span>
+                    <div className="line" />
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
 
-            {/* SLIDE 2: THE JOURNEY */}
-            <section className="hero-section">
-              <FloralDecor variant="top-only" />
-              <div className="hero-image-container">
-                <div className="gold-frame" />
-                <div className="hero-image-wrapper">
-                  <img src="/assets/one.png" className="hero-image" alt="Love Story" />
-                  <div className="hero-gradient-overlay" />
-                  <div className="hero-vignette" />
+              {/* SLIDE 2: THE JOURNEY */}
+              <section className="hero-section">
+                <FloralDecor variant="top-only" />
+                <div className="hero-image-container">
+                  <div className="gold-frame" />
+                  <div className="hero-image-wrapper">
+                    <img src="/assets/one.png" className="hero-image" alt="Love Story" />
+                    <div className="hero-gradient-overlay" />
+                    <div className="hero-vignette" />
+                  </div>
                 </div>
-              </div>
-              <motion.img
-                src="/assets/borderside.png"
-                className="side-border-left"
-                animate={{ y: currentSlide >= 1 ? 200 : 0, scaleX: -1 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                alt=""
-              />
-              <motion.img
-                src="/assets/borderside.png"
-                className="side-border-right"
-                animate={{ y: currentSlide >= 1 ? 200 : 0 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                alt=""
-              />
-              <motion.img
-                src="/assets/bottomframe1.png"
-                className="bottom-border-asset"
-                animate={{ y: currentSlide >= 1 ? 0 : 300 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                alt=""
-              />
-              <div className="hero-text-overlay" style={{ marginBottom: '3rem' }}>
-                <p className="wedding-of-text">Our Journey</p>
-                <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Beautiful Moments</h2>
-              </div>
-            </section>
+                <motion.img
+                  src="/assets/borderside.png"
+                  className="side-border-left"
+                  animate={{ y: currentSlide >= 1 ? 200 : 0, scaleX: -1 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  alt=""
+                />
+                <motion.img
+                  src="/assets/borderside.png"
+                  className="side-border-right"
+                  animate={{ y: currentSlide >= 1 ? 200 : 0 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  alt=""
+                />
+                <motion.img
+                  src="/assets/bottomframe1.png"
+                  className="bottom-border-asset"
+                  animate={{ y: currentSlide >= 1 ? 0 : 300 }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                  alt=""
+                />
+                <div className="hero-text-overlay" style={{ marginBottom: '3rem' }}>
+                  <p className="wedding-of-text">Our Journey</p>
+                  <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Beautiful Moments</h2>
+                </div>
+              </section>
 
-            {/* SLIDE 3: THE PROMISE */}
-            <section className="hero-section">
-              <FloralDecor variant="reversed" />
-              <div className="hero-image-container">
-                <div className="gold-frame" />
-                <div className="hero-image-wrapper">
-                  <img src="/assets/two.png" className="hero-image" alt="Engagement Day" />
-                  <div className="hero-gradient-overlay" />
-                  <div className="hero-vignette" />
+              {/* SLIDE 3: THE PROMISE */}
+              <section className="hero-section">
+                <FloralDecor variant="reversed" />
+                <div className="hero-image-container">
+                  <div className="gold-frame" />
+                  <div className="hero-image-wrapper">
+                    <img src="/assets/two.png" className="hero-image" alt="Engagement Day" />
+                    <div className="hero-gradient-overlay" />
+                    <div className="hero-vignette" />
+                  </div>
                 </div>
-              </div>
-              <motion.img
-                src="/assets/borderside.png"
-                className="side-border-left"
-                animate={{ y: currentSlide >= 2 ? 200 : 0, scaleX: -1 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                alt=""
-              />
-              <motion.img
-                src="/assets/borderside.png"
-                className="side-border-right"
-                animate={{ y: currentSlide >= 2 ? 200 : 0 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                alt=""
-              />
-              <motion.img
-                src="/assets/bottomframe1.png"
-                className="bottom-border-asset"
-                animate={{ y: currentSlide >= 2 ? 0 : 300 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                alt=""
-              />
-              <div className="hero-text-overlay" style={{ marginBottom: '3rem' }}>
-                <p className="wedding-of-text">Eternal Promise</p>
-                <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Together Forever</h2>
-              </div>
-            </section>
+                <motion.img
+                  src="/assets/borderside.png"
+                  className="side-border-left"
+                  animate={{ y: currentSlide >= 2 ? 200 : 0, scaleX: -1 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  alt=""
+                />
+                <motion.img
+                  src="/assets/borderside.png"
+                  className="side-border-right"
+                  animate={{ y: currentSlide >= 2 ? 200 : 0 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  alt=""
+                />
+                <motion.img
+                  src="/assets/bottomframe1.png"
+                  className="bottom-border-asset"
+                  animate={{ y: currentSlide >= 2 ? 0 : 300 }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                  alt=""
+                />
+                <div className="hero-text-overlay" style={{ marginBottom: '3rem' }}>
+                  <p className="wedding-of-text">Eternal Promise</p>
+                  <h2 className="couple-names" style={{ fontSize: 'clamp(2.4rem, 10vw, 5rem)' }}>Together Forever</h2>
+                </div>
+              </section>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ===== CONSOLIDATED INVITATION ===== */}
+      <section className="reception-section" id="reception">
+        <div className="premium-reception-container">
+
+          {/* Corner Florals (clipped inside box) */}
+          <img src="/assets/rightF.png" className="box-floral box-floral-top-right" alt="" />
+          <img src="/assets/leftF.png" className="box-floral box-floral-bottom-left" alt="" />
+
+          {/* Couple Sketch */}
+          <div className="reception-hero-block">
+            <div className="reception-integrated-illustration">
+              <img src="/assets/drawcouple.png" alt="Couple Sketch" className="couple-sketch-integrated" />
+            </div>
+            <div className="reception-header">
+              <span className="subtitle-gold">SAVE THE DATE FOR THE</span>
+              <h2 className="title-serif-large">Engagement Day</h2>
+            </div>
           </div>
-        </div>
-      )}
 
-      {/* ===== REMAINING VERTICAL SECTIONS ===== */}
-      <Section className="reception-section">
-        <FloralDecor variant="reversed" />
-        <div className="card">
-          <p className="title-serif" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Engagement Day</p>
-          <div className="gold-line" style={{ width: '40px' }} />
-          <p className="title-serif" style={{ fontSize: '0.9rem', color: 'var(--accent-gold)', letterSpacing: '4px' }}>THE CELEBRATION</p>
+          <div className="ornamental-divider"><div className="line" /><div className="diamond" /><div className="line" /></div>
 
-          <div className="reception-date">
-            <p className="day">Saturday,</p>
-            <p className="full-date">09 MEI 2026</p>
+          {/* Date & Time */}
+          <div className="reception-grid">
+            <div className="date-block-premium">
+              <p className="month">MAY</p>
+              <div className="day-number-wrapper">
+                <div className="side-line" />
+                <p className="day-number">09</p>
+                <div className="side-line" />
+              </div>
+              <p className="year">2026</p>
+              <p className="day-name">SATURDAY</p>
+            </div>
+
+            <div className="info-block-premium">
+              <div className="time-info">
+                <p className="label">JOIN US AT</p>
+                <p className="value">11:00 AM</p>
+                <p className="sub-value">ONWARDS</p>
+              </div>
+              <a href="#" className="btn-luxury"><span>ADD TO CALENDAR</span></a>
+            </div>
           </div>
 
-          <p className="title-serif" style={{ fontSize: '0.8rem', opacity: 0.7, letterSpacing: '1px' }}>
-            Event: 11.00 AM - Onwards
-          </p>
+          <div className="ornamental-divider"><div className="line" /><div className="diamond" /><div className="line" /></div>
 
-          <a href="#" className="btn-gold">Save the Date</a>
-        </div>
-      </Section>
-
-      <Section className="location-section">
-        <FloralDecor />
-        <div className="card">
-          <div style={{ marginBottom: '1.5rem' }}>
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="1.5">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
+          {/* Location */}
+          <div className="location-info-integrated">
+            <span className="subtitle-gold">THE LOCATION</span>
+            <h3 className="title-serif" style={{ fontSize: '1.8rem', color: '#fff', margin: '0.3rem 0' }}>Hotel la Belle</h3>
+            <p style={{ fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.6, margin: '0.3rem 0 1.5rem' }}>
+              597 Max Parkways, East Patience 82997,<br />France
+            </p>
+            <a href="#" className="btn-luxury"><span>VIEW ON MAP</span></a>
           </div>
-          <p className="title-serif" style={{ color: 'var(--accent-gold)', fontSize: '0.9rem', letterSpacing: '4px', marginBottom: '1.5rem' }}>THE LOCATION</p>
-          <p className="title-serif" style={{ fontSize: '1.5rem', textTransform: 'none' }}>Hotel la Belle</p>
-          <div className="gold-line" style={{ width: '30px', margin: '1rem auto' }} />
-          <p className="title-serif" style={{ fontSize: '0.8rem', opacity: 0.8, textTransform: 'none', lineHeight: '1.6' }}>
-            597 Max Parkways, East Patience 82997,<br />
-            France
-          </p>
-          <a href="#" className="btn-gold">View Location</a>
-        </div>
-      </Section>
 
-      <Section className="wishes-section">
-        <FloralDecor variant="reversed" />
-        <div className="card" style={{ maxWidth: '500px' }}>
-          <h2 className="title-script" style={{ fontSize: '3.5rem', color: '#fff' }}>Best Wishes</h2>
-          <div className="gold-line" />
-          <p className="title-serif" style={{ fontSize: '0.9rem', marginBottom: '2rem', opacity: 0.8 }}>
-            Your presence means the world to us. Please leave us a message.
-          </p>
-          <textarea
-            className="wishes-input"
-            placeholder="Type your message here..."
-            rows="4"
-            style={{ width: '100%', padding: '1rem', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--accent-gold)', color: '#fff', marginBottom: '1rem' }}
-          />
-          <button className="btn-gold" style={{ width: '100%' }}>Send Wishes</button>
-        </div>
-      </Section>
+          {/* Sign-off */}
+          <div className="simple-signoff">
+            <p className="title-script" style={{ fontSize: '2.5rem', color: '#fff' }}>Thank You</p>
+            <p className="subtitle-gold" style={{ opacity: 0.5, marginTop: '0.3rem' }}>ALBIN & ANITHA • 2026</p>
+          </div>
 
-      <footer style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--bg-dark)' }}>
-        <p className="title-script" style={{ fontSize: '2rem', marginBottom: '1rem' }}>Thank You</p>
-        <div className="gold-line" />
-        <p className="title-serif" style={{ fontSize: '0.7rem', letterSpacing: '4px', opacity: 0.5 }}>ALBIN & ANITHA • 2026</p>
-      </footer>
+        </div>
+      </section>
     </motion.main>
   );
 }

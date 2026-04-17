@@ -115,10 +115,10 @@ const Preloader = ({ progress, visible }) => {
             <svg viewBox="0 0 100 100" width="72" height="72" fill="none">
               {/* Sparkle dots */}
               {[
-                { cx: 50, cy: 7,  delay: 0 },
+                { cx: 50, cy: 7, delay: 0 },
                 { cx: 19, cy: 18, delay: 0.4 },
                 { cx: 81, cy: 18, delay: 0.8 },
-                { cx: 4,  cy: 46, delay: 1.2 },
+                { cx: 4, cy: 46, delay: 1.2 },
                 { cx: 96, cy: 46, delay: 1.6 },
                 { cx: 50, cy: 98, delay: 2.0 },
               ].map(({ cx, cy, delay }, i) => (
@@ -267,7 +267,7 @@ export default function App() {
     };
 
     Promise.all(ASSETS.map(src => preloadImage(src))).then(() => {
-      setTimeout(() => setIsLoading(false), 1500); 
+      setTimeout(() => setIsLoading(false), 1500);
     });
   }, []);
 
@@ -287,7 +287,7 @@ export default function App() {
     isAnimating.current = true;
     setCurrentSlide(index);
     if (audioRef.current && audioRef.current.paused && isPlaying) {
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().catch(() => { });
     }
     setTimeout(() => { isAnimating.current = false; }, 1200);
   }, [isPlaying]);
@@ -417,8 +417,8 @@ export default function App() {
   return (
     <>
       <Preloader progress={loadingProgress} visible={isLoading} />
-      
-      <audio 
+
+      <audio
         ref={audioRef}
         src="/assets/song.mp3"
         loop
@@ -433,7 +433,7 @@ export default function App() {
         animate={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 1.05 : 1 }}
         transition={{ duration: 1.2, delay: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
       >
-        <motion.div 
+        <motion.div
           className="music-control"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: isLoading ? 0 : 1, x: 0 }}
@@ -444,7 +444,7 @@ export default function App() {
               audioRef.current.pause();
               setIsPlaying(false);
             } else {
-              audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+              audioRef.current.play().then(() => setIsPlaying(true)).catch(() => { });
             }
           }}
           title={isPlaying ? "Stop Music" : "Play Music"}

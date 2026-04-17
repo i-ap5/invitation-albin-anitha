@@ -39,14 +39,182 @@ const FloralDecor = ({ variant = 'default' }) => (
   </>
 );
 
+const Preloader = ({ progress, visible }) => {
+  // Generate particles
+  const particles = Array.from({ length: 12 });
+
+  return (
+    <motion.div 
+      className="preloader-overlay"
+      animate={{ 
+        opacity: visible ? 1 : 0,
+        scale: visible ? 1 : 1.2,
+        pointerEvents: visible ? 'auto' : 'none'
+      }}
+      transition={{ duration: 1, ease: [0.43, 0.13, 0.23, 0.96] }}
+    >
+      {/* Ghostly Florals */}
+      <motion.img 
+        src="/assets/leftF.png" 
+        className="preloader-floral left"
+        animate={{ rotate: [0, 5, 0], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ repeat: Infinity, duration: 8 }}
+      />
+      <motion.img 
+        src="/assets/rightF.png" 
+        className="preloader-floral right"
+        animate={{ rotate: [0, -5, 0], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ repeat: Infinity, duration: 10 }}
+      />
+
+      {/* Floating Gold Particles */}
+      {particles.map((_, i) => (
+        <motion.div
+          key={i}
+          className="gold-particle"
+          initial={{ 
+            x: Math.random() * window.innerWidth, 
+            y: Math.random() * window.innerHeight,
+            opacity: 0 
+          }}
+          animate={{ 
+            y: [null, '-100vh'],
+            opacity: [0, 0.6, 0],
+            x: [null, `+=${(Math.random() - 0.5) * 100}px`]
+          }}
+          transition={{ 
+            duration: 10 + Math.random() * 10, 
+            repeat: Infinity,
+            delay: Math.random() * 5
+          }}
+        />
+      ))}
+
+      <div className="preloader-central">
+        <div className="monogram-container">
+          {/* Growing Vine Flourish */}
+          <svg className="vine-flourish" viewBox="0 0 400 100">
+            <motion.path
+              d="M 50 80 Q 150 20 200 50 T 350 20"
+              stroke="var(--accent-gold)"
+              strokeWidth="0.5"
+              fill="none"
+              strokeDasharray="400"
+              animate={{ strokeDashoffset: 400 - (400 * progress) / 100 }}
+              transition={{ ease: "easeInOut", duration: 0.5 }}
+              style={{ opacity: 0.4 }}
+            />
+          </svg>
+
+          <h1 className="liquid-text">
+            ALBIN <span className="amp">&</span> ANITHA
+            {/* The gold filling layer */}
+            <div 
+              className="liquid-fill" 
+              style={{ width: `${progress}%` }}
+            >
+              ALBIN <span className="amp">&</span> ANITHA
+              {/* Shimmer sweep effect */}
+              <div className="text-shimmer" />
+            </div>
+          </h1>
+        </div>
+        
+        <div className="date-badge">
+          <motion.span
+            animate={{ 
+              opacity: [0.2, 1, 0.2],
+              scale: [0.98, 1.02, 0.98]
+            }}
+            transition={{ repeat: Infinity, duration: 3 }}
+          >
+            MAY 09 • 2026
+          </motion.span>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const TOTAL_SLIDES = 3;
 const SWIPE_THRESHOLD = 40;
 
+const ASSETS = [
+  '/assets/topborder.png',
+  '/assets/hhh.png',
+  '/assets/borderside.png',
+  '/assets/one.png',
+  '/assets/bottomframe1.png',
+  '/assets/two.png',
+  '/assets/drawcouple.png',
+  '/assets/leftF.png',
+  '/assets/rightF.png',
+  '/assets/clienthero.png',
+  '/assets/client_details.png'
+];
+
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [horizontalComplete, setHorizontalComplete] = useState(false);
   const touchStartRef = useRef(0);
   const isAnimating = useRef(false);
+
+  const handleAddToCalendar = (e) => {
+    e.preventDefault();
+    const event = {
+      title: "Albin & Anitha Engagement",
+      start: "20260509T120000",
+      end: "20260509T150000",
+      location: "Marth Mariyam Town Church, Muttom",
+      description: "Join us for the Engagement Ceremony of Albin & Anitha."
+    };
+
+    const icsContent = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "BEGIN:VEVENT",
+      `SUMMARY:${event.title}`,
+      `DTSTART:${event.start}`,
+      `DTEND:${event.end}`,
+      `LOCATION:${event.location}`,
+      `DESCRIPTION:${event.description}`,
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ].join("\n");
+
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "Albin_Anitha_Engagement.ics");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  useEffect(() => {
+    let loadedCount = 0;
+    const totalAssets = ASSETS.length;
+
+    const preloadImage = (src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          loadedCount++;
+          setLoadingProgress((loadedCount / totalAssets) * 100);
+          resolve();
+        };
+        img.onerror = resolve; // Continue even if one fails
+      });
+    };
+
+    Promise.all(ASSETS.map(src => preloadImage(src))).then(() => {
+      setTimeout(() => setIsLoading(false), 1000); // Small buffer for smoothness
+    });
+  }, []);
 
   const goToSlide = useCallback((index) => {
     if (isAnimating.current) return;
@@ -155,11 +323,15 @@ export default function App() {
   }, [horizontalComplete]);
 
   return (
-    <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-    >
+    <>
+      <Preloader progress={loadingProgress} visible={isLoading} />
+
+      <motion.main
+        key="main"
+        initial={{ opacity: 0, scale: 1.05 }}
+        animate={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 1.05 : 1 }}
+        transition={{ duration: 1.2, delay: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
+      >
       {/* ===== FULLSCREEN HORIZONTAL SLIDER ===== */}
       <AnimatePresence>
         {!horizontalComplete && (
@@ -340,10 +512,16 @@ export default function App() {
             <div className="info-block-premium">
               <div className="time-info">
                 <p className="label">JOIN US AT</p>
-                <p className="value">11:00 AM</p>
-                <p className="sub-value">ONWARDS</p>
+                <p className="value">12:00 PM</p>
+                <p className="sub-value">MIDDAY</p>
               </div>
-              <a href="#" className="btn-luxury"><span>ADD TO CALENDAR</span></a>
+              <a 
+                href="#"
+                onClick={handleAddToCalendar}
+                className="btn-luxury"
+              >
+                <span>ADD TO CALENDAR</span>
+              </a>
             </div>
           </div>
 
@@ -352,11 +530,11 @@ export default function App() {
           {/* Location */}
           <div className="location-info-integrated">
             <span className="subtitle-gold">THE LOCATION</span>
-            <h3 className="title-serif" style={{ fontSize: '1.8rem', color: '#fff', margin: '0.3rem 0' }}>Hotel la Belle</h3>
+            <h3 className="title-serif" style={{ fontSize: '1.8rem', color: '#fff', margin: '0.3rem 0' }}>Marth Mariyam Town Church</h3>
             <p style={{ fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.6, margin: '0.3rem 0 1.5rem' }}>
-              597 Max Parkways, East Patience 82997,<br />France
+              Muttom<br />Idukki, Kerala
             </p>
-            <a href="#" className="btn-luxury"><span>VIEW ON MAP</span></a>
+            <a href="https://maps.app.goo.gl/pbD51AZLsYnMMdgL7" target="_blank" rel="noopener noreferrer" className="btn-luxury"><span>VIEW ON MAP</span></a>
           </div>
 
           {/* Sign-off */}
@@ -367,6 +545,7 @@ export default function App() {
 
         </div>
       </section>
-    </motion.main>
+        </motion.main>
+    </>
   );
 }
